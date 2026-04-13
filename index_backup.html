@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GymPro">
+<meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon.svg">
+<title>Gym Programme</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0a0a0a;
+  --s1: #141414;
+  --s2: #1e1e1e;
+  --s3: #252525;
+  --bd: #2a2a2a;
+  --tx: #f0f0f0;
+  --mt: #888;
+  --ac: #e8ff00;
+  --red: #ff453a;
+  --org: #ff9f0a;
+  --grn: #32d74b;
+  --blu: #0a84ff;
+  --safe: env(safe-area-inset-bottom, 0px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+  background: var(--bg);
+  color: var(--tx);
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--s1);
+  border-bottom: 1px solid var(--bd);
+  padding: 14px 16px 10px;
+  padding-top: calc(14px + env(safe-area-inset-top, 0px));
+  flex-shrink: 0;
+}
+
+.topbar-row { display: flex; align-items: center; justify-content: space-between; }
+
+.app-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1.5px;
+  color: var(--ac);
+  line-height: 1;
+}
+
+.week-badge {
+  font-size: 11px;
+  font-weight: 600;
+  background: rgba(232,255,0,0.1);
+  color: var(--ac);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(232,255,0,0.2);
+}
+
+/* NAV TABS */
+.nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: var(--s1);
+  border-bottom: 1px solid var(--bd);
+  flex-shrink: 0;
+}
+
+.nav-btn {
+  padding: 10px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mt);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  transition: color 0.15s;
+  position: relative;
+}
+
+.nav-btn.active { color: var(--ac); }
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: var(--ac);
+  border-radius: 2px;
+}
+
+.nav-icon { font-size: 18px; }
+
+/* MAIN SCROLL */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(16px + var(--safe));
+}
+
+/* PANELS */
+.panel { display: none; padding: 12px 14px; }
+.panel.active { display: block; }
+
+/* SESSION HEADER */
+.sess-header {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.sess-day {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: var(--ac);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.sess-subtitle { font-size: 12px; color: var(--mt); margin-top: 2px; }
+
+/* EXERCISE CARDS */
+.ex-card {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.ex-card.done { border-color: var(--grn); opacity: 0.7; }
+
+.ex-main {
+  display: grid;
+  grid-template-columns: 36px 1fr auto;
+  gap: 8px;
+  align-items: start;
+  padding: 12px;
+}
+
+.ex-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 28px;
+  color: var(--bd);
+  line-height: 1;
+  padding-top: 1px;
+}
+
+.ex-card.done .ex-num { color: var(--grn); }
+
+.ex-name { font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.ex-note { font-size: 12px; color: var(--mt); line-height: 1.4; }
+
+.ex-right { text-align: right; }
+.ex-sets { font-size: 13px; color: var(--mt); margin-bottom: 5px; white-space: nowrap; }
+
+.fbadge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.f-never { background: rgba(255,69,58,0.15); color: var(--red); }
+.f-close { background: rgba(255,159,10,0.15); color: var(--org); }
+.f-yes { background: rgba(50,215,75,0.15); color: var(--grn); }
+
+.ex-actions {
+  display: flex;
+  gap: 6px;
+  padding: 0 12px 12px;
+}
+
+.ex-btn {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--bd);
+  background: var(--s2);
+  color: var(--tx);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ex-btn:active { transform: scale(0.97); }
+.ex-btn.primary { background: var(--ac); color: #000; border-color: var(--ac); }
+.ex-btn.done-btn { background: rgba(50,215,75,0.1); color: var(--grn); border-color: rgba(50,215,75,0.3); }
+
+/* REST TIMER */
+.timer-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.timer-overlay.show { display: flex; }
+
+.timer-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mt);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.timer-circle {
+  width: 200px;
+  height: 200px;
+  position: relative;
+}
+
+.timer-circle svg {
+  width: 200px;
+  height: 200px;
+  transform: rotate(-90deg);
+}
+
+.timer-track { fill: none; stroke: var(--s2); stroke-width: 8; }
+.timer-prog { fill: none; stroke: var(--ac); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s linear; }
+
+.timer-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-secs {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  color: var(--ac);
+  line-height: 1;
+}
+
+.timer-next { font-size: 11px; color: var(--mt); margin-top: 4px; }
+
+.timer-btns { display: flex; gap: 12px; }
+
+.timer-btn {
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 12px;
+  border: 1px solid var(--bd);
+  background: var(--s1);
+  color: var(--tx);
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.timer-btn.skip { background: var(--ac); color: #000; border-color: var(--ac); }
+
+/* PROGRESS BAR */
+.progress-bar {
+  background: var(--bd);
+  height: 4px;
+  border-radius: 2px;
+  margin: 10px 0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--ac);
+  border-radius: 2px;
+  transition: width 0.3s;
+}
+
+.progress-label { font-size: 11px; color: var(--mt); margin-bottom: 4px; display: flex; justify-content: space-between; }
+
+/* SECTION LABEL */
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--mt);
+  margin: 16px 0 8px;
+}
+
+/* RULE CARDS */
+.rule-card {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 8px;
+}
+
+.rule-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.rule-body { font-size: 13px; color: var(--mt); line-height: 1.6; }
+
+/* PROG ROWS */
+.prog-table {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.prog-head {
+  padding: 12px 14px;
+  font-weight: 600;
+  font-size: 14px;
+  border-bottom: 1px solid var(--bd);
+}
+
+.prog-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--bd);
+  font-size: 13px;
+  gap: 12px;
+}
+
+.prog-row:last-child { border-bottom: none; }
+.prog-val { color: var(--mt); font-size: 12px; text-align: right; flex-shrink: 0; }
+
+/* WEEK SCHEDULE */
+.week-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-bottom: 16px;
+}
+
+.week-day {
+  background: var(--s1);
+  border: 1px solid var(--bd);
+  border-radius: 8px;
+  padding: 8px 3px;
+  text-align: center;
+}
+
+.wd-name { font-size: 10px; font-weight: 600; color: var(--mt); margin-bottom: 4px; text-transform: uppercase; }
+.wd-tag { font-size: 8px; font-weight: 700; padding: 2px 3px; border-radius: 3px; display: block; margin: 1px auto; text-transform: uppercase; letter-spacing: 0.03em; }
+.wd-lower { background: rgba(10,132,255,0.2); color: #0a84ff; }
+.wd-upper { background: rgba(50,215,75,0.2); color: #32d74b; }
+.wd-rest { background: rgba(255,255,255,0.05); color: var(--mt); }
+
+/* INSTALL BANNER */
+.install-banner {
+  display: none;
+  background: rgba(232,255,0,0.08);
+  border: 1px solid rgba(232,255,0,0.2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--ac);
+  line-height: 1.5;
+}
+
+/* NOTIFICATION */
+.notif {
+  position: fixed;
+  bottom: calc(20px + var(--safe));
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--s2);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 200;
+  transition: transform 0.3s;
+  white-space: nowrap;
+}
+
+.notif.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-row">
+    <div class="app-title">GymPro</div>
+    <span class="week-badge" id="week-badge">Block A · Week 1</span>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showPanel('lower-a')" id="nav-lower-a">
+    <span class="nav-icon">🦵</span>Lower A
+  </button>
+  <button class="nav-btn" onclick="showPanel('upper-a')" id="nav-upper-a">
+    <span class="nav-icon">💪</span>Upper A
+  </button>
+  <button class="nav-btn" onclick="showPanel('lower-b')" id="nav-lower-b">
+    <span class="nav-icon">🦵</span>Lower B
+  </button>
+  <button class="nav-btn" onclick="showPanel('upper-b')" id="nav-upper-b">
+    <span class="nav-icon">💪</span>Upper B
+  </button>
+  <button class="nav-btn" onclick="showPanel('info')" id="nav-info">
+    <span class="nav-icon">📋</span>Rules
+  </button>
+</div>
+
+<div class="main">
+
+<!-- LOWER A -->
+<div id="panel-lower-a" class="panel active">
+  <div class="sess-header">
+    <div class="sess-day">LOWER A</div>
+    <div class="sess-subtitle">Monday · Squat dominant · Full CNS after weekend rest</div>
+    <div style="margin-top:10px">
+      <div class="progress-label"><span>Session progress</span><span id="la-prog-label">0 / 5</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="la-prog-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div id="ex-la-1" class="ex-card">
+    <div class="ex-main">
+      <div class="ex-num">1</div>
+      <div>
+        <div class="ex-name">Back Squat</div>
+        <div class="ex-note">Primary strength movement. Highest CNS demand — always first. Full CNS required.</div>
+      </div>
+      <div class="ex-right">
+        <div class="ex-sets">4 × 4–6</div>
+        <span class="fbadge f-never">Never fail</span>
+      </div>
+    </div>
+    <div class="ex-actions">
+      <button class="ex-btn" onclick="startRest(120, 'Romanian Deadlift')">Rest 2 min</button>
+      <button class="ex-btn done-btn" onclick="markDone('la',1,5)">✓ Done</button>
+    </div>
+  </div>
+
+  <div id="ex-la-2" class="ex-card">
+    <div class="ex-main">
+      <div class="ex-num">2</div>
+      <div>
+        <div class="ex-name">Romanian Deadlift</div>
+        <div class="ex-note">Hinge pattern while posterior chain is strong. 3 sec controlled eccentric.</div>
+      </div>
+      <div class="ex-right">
+        <div class="ex-sets">3 × 6–8</div>
+        <span class="fbadge f-close">1–2 RIR</span>
+      </div>
+    </div>
+    <div class="ex-actions">
+      <button class="ex-btn" onclick="startRest(90, 'Bulgarian Split Squat')">Rest 90s</button>
+      <button class="ex-btn done-btn" onclick="markDone('la',2,5)">✓ Done</button>
+    </div>
+  </div>
+
+  <div id="ex-la-3" class="ex-card">
+    <div class="ex-main">
+      <div class="ex-num">3</div>
+      <div>
+        <div class="ex-name">Bulgarian Split Squat</div>
+        <div class="ex-note">Unilateral stability and hip flexor length. Rear foot elevated on bench.</div>
+      </div>
+      <div class="ex-right">
+        <div class="ex-sets">3 × 6–8 each</div>
+        <span class="fbadge f-close">1–2 RIR</span>
+      </div>
+    </div>
+    <div class="ex-actions">
+      <button class="ex-btn" onclick="startRest(90, 'Nordic Curl')">Rest 90s</button>
+      <button class="ex-btn done-btn" onclick="markDone('la',3,5)">✓ Done</button>
+    </div>
+  </div>
+
+  <div id="ex-la-4" class="ex-card">
+    <div class="ex-main">
+      <div class="ex-num">4</div>
+      <div>
+        <div class="ex-name">Nordic Hamstring Curl</div>
+        <div class="ex-note">Injury prevention for grapplers. Start assisted. Hamstrings warm from squats and RDLs.</div>
+      </div>
+      <div class="ex-right">
+        <div class="ex-sets">3 × 4–6</div>
+        <span class="fbadge f-close">1–2 RIR</span>
+      </div>
+    </div>
+    <div class="ex-actions">
+      <button class="ex-btn" onclick="startRest(90, 'Tibialis Raise')">Rest 90s</button>
+      <button class="ex-btn done-btn" onclick="markDone('la',4,5)">✓ Done</button>
+    </div>
+  </div>
+
+  <div id="ex-la-5" class="ex-card">
+    <div class="ex-main">
+      <div class="ex-num">5</div>
+      <div>
+        <div class="ex-name">Tibialis Raise</div>
+        <div class="ex-note">Foot and shin strength. Directly fixes BJJ foot cramping. Lowest CNS demand. Always last.</div>
+      </div>
+      <div class="ex-right">
+        <div class="ex-sets">3 × 15–20</div>
+        <span class="fbadge f-yes">Last set fail</span>
+      </div>
+    </div>
+    <div class="ex-actions">
+      <button class="ex-btn" onclick="startRest(60, 'Next set')">Rest 60s</button>
+      <button class="ex-btn done-btn" onclick="markDone('la',5,5)">✓ Done</button>
+    </div>
+  </div>
+</div>
+
+<!-- UPPER A -->
+<div id="panel-upper-a" class="panel">
+  <div class="sess-header">
+    <div class="sess-day">UPPER A</div>
+    <div class="sess-subtitle">Tuesday · Horizontal push and vertical pull · Antagonist pairing</div>
+    <div style="margin-top:10px">
+      <div class="progress-label"><span>Session progress</span><span id="ua-prog-label">0 / 6</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="ua-prog-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div id="ex-ua-1" class="ex-card">
+    <div class="ex-main"><div class="ex-num">1</div><div><div class="ex-name">Barbell Bench Press</div><div class="ex-note">Primary horizontal push. Needs completely fresh CNS. Heaviest upper body movement.</div></div><div class="ex-right"><div class="ex-sets">4 × 4–6</div><span class="fbadge f-never">Never fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(180,'Weighted Pull-Up')">Rest 3 min</button><button class="ex-btn done-btn" onclick="markDone('ua',1,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ua-2" class="ex-card">
+    <div class="ex-main"><div class="ex-num">2</div><div><div class="ex-name">Weighted Pull-Up</div><div class="ex-note">Primary vertical pull. Lats and biceps fresh from pressing — antagonist pairing.</div></div><div class="ex-right"><div class="ex-sets">4 × 4–6</div><span class="fbadge f-never">Never fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(180,'Overhead Press')">Rest 3 min</button><button class="ex-btn done-btn" onclick="markDone('ua',2,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ua-3" class="ex-card">
+    <div class="ex-main"><div class="ex-num">3</div><div><div class="ex-name">Overhead Press</div><div class="ex-note">Secondary push. Shoulders warm from bench. Builds handstand strength directly.</div></div><div class="ex-right"><div class="ex-sets">3 × 6–8</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(120,'Chest-Supported Row')">Rest 2 min</button><button class="ex-btn done-btn" onclick="markDone('ua',3,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ua-4" class="ex-card">
+    <div class="ex-main"><div class="ex-num">4</div><div><div class="ex-name">Chest-Supported Row</div><div class="ex-note">Secondary horizontal pull. Lower back removed — posterior chain fatigue doesn't limit this.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(90,'Incline DB Press')">Rest 90s</button><button class="ex-btn done-btn" onclick="markDone('ua',4,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ua-5" class="ex-card">
+    <div class="ex-main"><div class="ex-num">5</div><div><div class="ex-name">Incline Dumbbell Press</div><div class="ex-note">Accessory upper chest. Pre-fatigue from bench means lighter loads still hit hard.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Face Pull')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('ua',5,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ua-6" class="ex-card">
+    <div class="ex-main"><div class="ex-num">6</div><div><div class="ex-name">Face Pull</div><div class="ex-note">Rotator cuff and rear delt health. Mandatory for shoulder longevity. Always last.</div></div><div class="ex-right"><div class="ex-sets">3 × 15–20</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Next set')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('ua',6,6)">✓ Done</button></div>
+  </div>
+</div>
+
+<!-- LOWER B -->
+<div id="panel-lower-b" class="panel">
+  <div class="sess-header">
+    <div class="sess-day">LOWER B</div>
+    <div class="sess-subtitle">Thursday · Hinge dominant · Wednesday rest = full CNS recovery</div>
+    <div style="margin-top:10px">
+      <div class="progress-label"><span>Session progress</span><span id="lb-prog-label">0 / 5</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="lb-prog-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div id="ex-lb-1" class="ex-card">
+    <div class="ex-main"><div class="ex-num">1</div><div><div class="ex-name">Conventional Deadlift</div><div class="ex-note">Heaviest movement in the programme. Absolute first — any fatigue before this is unacceptable.</div></div><div class="ex-right"><div class="ex-sets">4 × 3–5</div><span class="fbadge f-never">Never fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(180,'Front Squat')">Rest 3 min</button><button class="ex-btn done-btn" onclick="markDone('lb',1,5)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-lb-2" class="ex-card">
+    <div class="ex-main"><div class="ex-num">2</div><div><div class="ex-name">Front Squat</div><div class="ex-note">Quad dominant, upright torso. Different primary emphasis from deadlift — quality stays high.</div></div><div class="ex-right"><div class="ex-sets">3 × 5–7</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(120,'Hip Thrust')">Rest 2 min</button><button class="ex-btn done-btn" onclick="markDone('lb',2,5)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-lb-3" class="ex-card">
+    <div class="ex-main"><div class="ex-num">3</div><div><div class="ex-name">Hip Thrust</div><div class="ex-note">Glute peak contraction. Targets glutes at full extension which deadlift doesn't hit.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(90,'Single Leg Press')">Rest 90s</button><button class="ex-btn done-btn" onclick="markDone('lb',3,5)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-lb-4" class="ex-card">
+    <div class="ex-main"><div class="ex-num">4</div><div><div class="ex-name">Single Leg Press</div><div class="ex-note">Unilateral quad volume. Low spinal load — safe when erectors are fatigued from deadlifts.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10 each</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Calf Raise')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('lb',4,5)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-lb-5" class="ex-card">
+    <div class="ex-main"><div class="ex-num">5</div><div><div class="ex-name">Standing Calf Raise</div><div class="ex-note">Calf and ankle strength. Full range of motion, slow tempo. Always last.</div></div><div class="ex-right"><div class="ex-sets">4 × 12–15</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Next set')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('lb',5,5)">✓ Done</button></div>
+  </div>
+</div>
+
+<!-- UPPER B -->
+<div id="panel-upper-b" class="panel">
+  <div class="sess-header">
+    <div class="sess-day">UPPER B</div>
+    <div class="sess-subtitle">Friday · Vertical push and horizontal pull · Row leads</div>
+    <div style="margin-top:10px">
+      <div class="progress-label"><span>Session progress</span><span id="ub-prog-label">0 / 6</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="ub-prog-bar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div id="ex-ub-1" class="ex-card">
+    <div class="ex-main"><div class="ex-num">1</div><div><div class="ex-name">Barbell Row</div><div class="ex-note">Heaviest pull movement. Fresh spinal erectors required. Primary strength driver for this day.</div></div><div class="ex-right"><div class="ex-sets">4 × 5–7</div><span class="fbadge f-never">Never fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(180,'DB Shoulder Press')">Rest 3 min</button><button class="ex-btn done-btn" onclick="markDone('ub',1,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ub-2" class="ex-card">
+    <div class="ex-main"><div class="ex-num">2</div><div><div class="ex-name">Seated DB Shoulder Press</div><div class="ex-note">Primary vertical push. Deltoids fresh — rows don't fatigue them significantly.</div></div><div class="ex-right"><div class="ex-sets">4 × 6–8</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(120,'Weighted Dips')">Rest 2 min</button><button class="ex-btn done-btn" onclick="markDone('ub',2,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ub-3" class="ex-card">
+    <div class="ex-main"><div class="ex-num">3</div><div><div class="ex-name">Weighted Dips</div><div class="ex-note">Tricep and lower chest. After overhead press hits all three push muscles with complementary angles.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(90,'Lat Pulldown')">Rest 90s</button><button class="ex-btn done-btn" onclick="markDone('ub',3,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ub-4" class="ex-card">
+    <div class="ex-main"><div class="ex-num">4</div><div><div class="ex-name">Lat Pulldown</div><div class="ex-note">Vertical pull volume. Lats warm from rows but not exhausted. Full stretch at top every rep.</div></div><div class="ex-right"><div class="ex-sets">3 × 8–10</div><span class="fbadge f-close">1–2 RIR</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(90,'Lateral Raise')">Rest 90s</button><button class="ex-btn done-btn" onclick="markDone('ub',4,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ub-5" class="ex-card">
+    <div class="ex-main"><div class="ex-num">5</div><div><div class="ex-name">Lateral Raise</div><div class="ex-note">Medial delt width. Pre-fatigue from pressing — lighter loads still produce full stimulus.</div></div><div class="ex-right"><div class="ex-sets">3 × 12–15</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Hammer Curl')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('ub',5,6)">✓ Done</button></div>
+  </div>
+
+  <div id="ex-ub-6" class="ex-card">
+    <div class="ex-main"><div class="ex-num">6</div><div><div class="ex-name">Hammer Curl</div><div class="ex-note">Brachialis and grip strength. Lowest CNS demand of the session. Always last.</div></div><div class="ex-right"><div class="ex-sets">3 × 10–12</div><span class="fbadge f-yes">Last set fail</span></div></div>
+    <div class="ex-actions"><button class="ex-btn" onclick="startRest(60,'Next set')">Rest 60s</button><button class="ex-btn done-btn" onclick="markDone('ub',6,6)">✓ Done</button></div>
+  </div>
+</div>
+
+<!-- INFO / RULES -->
+<div id="panel-info" class="panel">
+  <div class="sec-label">Weekly Schedule</div>
+  <div class="week-row">
+    <div class="week-day"><div class="wd-name">Mon</div><span class="wd-tag wd-lower">Lower A</span></div>
+    <div class="week-day"><div class="wd-name">Tue</div><span class="wd-tag wd-upper">Upper A</span></div>
+    <div class="week-day"><div class="wd-name">Wed</div><span class="wd-tag wd-rest">Rest</span></div>
+    <div class="week-day"><div class="wd-name">Thu</div><span class="wd-tag wd-lower">Lower B</span></div>
+    <div class="week-day"><div class="wd-name">Fri</div><span class="wd-tag wd-upper">Upper B</span></div>
+    <div class="week-day"><div class="wd-name">Sat</div><span class="wd-tag wd-rest">Rest</span></div>
+    <div class="week-day"><div class="wd-name">Sun</div><span class="wd-tag wd-rest">Rest</span></div>
+  </div>
+
+  <div class="sec-label">Failure Rules</div>
+  <div class="rule-card">
+    <div class="rule-title" style="color:var(--red)">Never to failure — compounds</div>
+    <div class="rule-body">Squat, deadlift, bench, barbell row, weighted pull-up. CNS takes 48–72 hrs to recover. Leave 2–3 reps in reserve always.</div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-title" style="color:var(--org)">1–2 reps in reserve — secondary compounds</div>
+    <div class="rule-body">Work hard but stop before true failure. Maximum stimulus with manageable fatigue. Sweet spot for most of your training.</div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-title" style="color:var(--grn)">Last set to failure — isolations only</div>
+    <div class="rule-body">Tibialis raise, face pull, lateral raise, calf raise, hammer curl. Fatigue here doesn't carry over to anything important.</div>
+  </div>
+  <div class="rule-card">
+    <div class="rule-title" style="color:var(--ac)">Golden rule</div>
+    <div class="rule-body">Form breaks down — set is over. Failure = muscular failure with perfect form. A rounded back deadlift is an injury, not a rep.</div>
+  </div>
+
+  <div class="sec-label">Progression</div>
+  <div class="prog-table">
+    <div class="prog-head">Double Progression</div>
+    <div class="prog-row"><span>Hit top of rep range 2 sessions in a row</span><span class="prog-val" style="color:var(--grn)">Add weight</span></div>
+    <div class="prog-row"><span>Can't reach bottom of rep range</span><span class="prog-val" style="color:var(--red)">Drop 10%</span></div>
+    <div class="prog-row"><span>Hit top on only 1 set</span><span class="prog-val">Same weight</span></div>
+  </div>
+
+  <div class="prog-table">
+    <div class="prog-head">Weight Increments</div>
+    <div class="prog-row"><span>Barbell squat / deadlift / bench / row</span><span class="prog-val">+2.5–5 kg</span></div>
+    <div class="prog-row"><span>Barbell overhead press</span><span class="prog-val">+1.25–2.5 kg</span></div>
+    <div class="prog-row"><span>Dumbbell exercises</span><span class="prog-val">+2 kg</span></div>
+    <div class="prog-row"><span>Pull-up / dip (belt)</span><span class="prog-val">+2.5 kg</span></div>
+    <div class="prog-row"><span>Isolation / machine</span><span class="prog-val">+2.5–5 kg</span></div>
+  </div>
+
+  <div class="prog-table">
+    <div class="prog-head">Deload — Every 4th Week</div>
+    <div class="prog-row"><span>Same exercises, same days</span><span class="prog-val">No changes</span></div>
+    <div class="prog-row"><span>Reduce sets</span><span class="prog-val">4 → 2–3 sets</span></div>
+    <div class="prog-row"><span>Reduce weight</span><span class="prog-val">Drop 40–50%</span></div>
+  </div>
+
+  <div class="prog-table">
+    <div class="prog-head">Block Rotation</div>
+    <div class="prog-row"><span>Block A — Weeks 1–8</span><span class="prog-val" style="color:var(--blu)">Strength · 3–8 reps</span></div>
+    <div class="prog-row"><span>Block B — Weeks 9–16</span><span class="prog-val" style="color:var(--grn)">Hypertrophy · 8–15 reps</span></div>
+    <div class="prog-row"><span>Block A returns — Week 17</span><span class="prog-val" style="color:var(--ac)">Stronger base</span></div>
+  </div>
+</div>
+
+</div><!-- end .main -->
+
+<!-- REST TIMER OVERLAY -->
+<div class="timer-overlay" id="timer-overlay">
+  <div class="timer-label">REST TIMER</div>
+  <div class="timer-circle">
+    <svg viewBox="0 0 200 200">
+      <circle class="timer-track" cx="100" cy="100" r="88"/>
+      <circle class="timer-prog" id="timer-circle" cx="100" cy="100" r="88"
+        stroke-dasharray="553" stroke-dashoffset="0"/>
+    </svg>
+    <div class="timer-num">
+      <div class="timer-secs" id="timer-display">120</div>
+      <div class="timer-next" id="timer-next">Next: —</div>
+    </div>
+  </div>
+  <div class="timer-btns">
+    <button class="timer-btn" onclick="stopTimer()">Cancel</button>
+    <button class="timer-btn skip" onclick="stopTimer()">Skip</button>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<script>
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(() => {});
+}
+
+// State
+let doneMap = {};
+let timerInterval = null;
+let timerSecs = 0;
+let timerTotal = 0;
+
+// Week tracking
+let weekNum = parseInt(localStorage.getItem('gym-week') || '1');
+document.getElementById('week-badge').textContent = 'Block A · Week ' + weekNum;
+
+// Panel navigation
+function showPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+}
+
+// Mark exercise done
+function markDone(session, num, total) {
+  const key = session + '-' + num;
+  doneMap[key] = true;
+  const card = document.getElementById('ex-' + session + '-' + num);
+  if (card) card.classList.add('done');
+  updateProgress(session, total);
+  showNotif('Exercise ' + num + ' complete ✓');
+}
+
+function updateProgress(session, total) {
+  let done = 0;
+  for (let i = 1; i <= total; i++) {
+    if (doneMap[session + '-' + i]) done++;
+  }
+  const pct = Math.round((done / total) * 100);
+  const bar = document.getElementById(session + '-prog-bar');
+  const label = document.getElementById(session + '-prog-label');
+  if (bar) bar.style.width = pct + '%';
+  if (label) label.textContent = done + ' / ' + total;
+  if (done === total) showNotif('🔥 Session complete! Great work.');
+}
+
+// Rest timer
+const CIRCUM = 553;
+
+function startRest(secs, nextEx) {
+  timerTotal = secs;
+  timerSecs = secs;
+  document.getElementById('timer-display').textContent = secs;
+  document.getElementById('timer-next').textContent = 'Next: ' + nextEx;
+  document.getElementById('timer-circle').style.strokeDashoffset = '0';
+  document.getElementById('timer-overlay').classList.add('show');
+  clearInterval(timerInterval);
+  timerInterval = setInterval(function() {
+    timerSecs--;
+    document.getElementById('timer-display').textContent = timerSecs;
+    const offset = CIRCUM * (1 - timerSecs / timerTotal);
+    document.getElementById('timer-circle').style.strokeDashoffset = offset;
+    if (timerSecs <= 0) {
+      stopTimer();
+      showNotif('Rest complete — go!');
+      try { new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAA').play(); } catch(e) {}
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  document.getElementById('timer-overlay').classList.remove('show');
+}
+
+// Notification
+function showNotif(msg) {
+  const n = document.getElementById('notif');
+  n.textContent = msg;
+  n.classList.add('show');
+  setTimeout(() => n.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
