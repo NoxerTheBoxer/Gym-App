@@ -8,10 +8,10 @@
 <meta name="apple-mobile-web-app-title" content="GymPro">
 <meta name="theme-color" content="#0a0a0a">
 <link rel="manifest" href="./manifest.json">
-<title>Gym Programme</title>
+<title>GymPro</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
-:root{--bg:#0a0a0a;--s1:#141414;--s2:#1e1e1e;--bd:#2a2a2a;--tx:#f0f0f0;--mt:#888;--ac:#e8ff00;--red:#ff453a;--org:#ff9f0a;--grn:#32d74b;--blu:#0a84ff;--safe:env(safe-area-inset-bottom,0px)}
+:root{--bg:#0a0a0a;--s1:#141414;--s2:#1e1e1e;--bd:#2a2a2a;--tx:#f0f0f0;--mt:#888;--ac:#e8ff00;--red:#ff453a;--org:#ff9f0a;--grn:#32d74b;--blu:#0a84ff;--pur:#bf5af2;--safe:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
 body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans-serif;font-size:15px;display:flex;flex-direction:column}
@@ -19,10 +19,7 @@ body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans
 .topbar-row{display:flex;align-items:center;justify-content:space-between}
 .app-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:1.5px;color:var(--ac);line-height:1}
 .week-badge{font-size:11px;font-weight:600;background:rgba(232,255,0,.1);color:var(--ac);padding:4px 10px;border-radius:20px;border:1px solid rgba(232,255,0,.2)}
-.mode-toggle{display:flex;background:var(--s2);border:1px solid var(--bd);border-radius:8px;overflow:hidden;margin-top:10px}
-.mode-btn{flex:1;padding:7px 10px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;background:none;border:none;color:var(--mt);cursor:pointer;transition:all .15s}
-.mode-btn.active{background:var(--ac);color:#000}
-.nav{display:grid;grid-template-columns:repeat(5,1fr);background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);background:var(--s1);border-bottom:1px solid var(--bd);flex-shrink:0}
 .nav-btn{padding:10px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--mt);background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
 .nav-btn.active{color:var(--ac)}
 .nav-btn.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--ac);border-radius:2px}
@@ -33,26 +30,36 @@ body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans
 .sess-header{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:14px;margin-bottom:12px}
 .sess-day{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--ac);letter-spacing:1px;line-height:1}
 .sess-sub{font-size:12px;color:var(--mt);margin-top:2px}
-.home-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;background:rgba(10,132,255,.15);color:var(--blu);border:1px solid rgba(10,132,255,.3);margin-top:6px}
 .prog-wrap{margin-top:10px}
 .prog-label{font-size:11px;color:var(--mt);margin-bottom:4px;display:flex;justify-content:space-between}
 .prog-bar{background:var(--bd);height:4px;border-radius:2px;overflow:hidden}
 .prog-fill{height:100%;background:var(--ac);border-radius:2px;transition:width .3s;width:0%}
-.kit-note{background:rgba(10,132,255,.08);border:1px solid rgba(10,132,255,.2);border-radius:10px;padding:10px 14px;font-size:12px;color:#4da3ff;margin-bottom:12px;line-height:1.5}
+.section-header{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--mt);margin:14px 0 8px;padding:0 2px;display:flex;align-items:center;gap:8px}
+.section-header::after{content:'';flex:1;height:1px;background:var(--bd)}
 .ex-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;margin-bottom:8px;overflow:hidden;transition:border-color .2s}
 .ex-card.done{border-color:var(--grn);opacity:.65}
+.ex-card.warmup{border-color:rgba(10,132,255,.2);background:rgba(10,132,255,.04)}
+.ex-card.primer{border-color:rgba(191,90,242,.2);background:rgba(191,90,242,.04)}
+.ex-card.superset{border-left:3px solid var(--org)}
 .ex-main{display:grid;grid-template-columns:36px 1fr auto;gap:8px;align-items:start;padding:12px}
 .ex-num{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--bd);line-height:1}
 .ex-card.done .ex-num{color:var(--grn)}
+.ex-card.warmup .ex-num{color:rgba(10,132,255,.3);font-size:18px}
+.ex-card.primer .ex-num{color:rgba(191,90,242,.4);font-size:18px}
 .ex-name{font-weight:600;font-size:14px;margin-bottom:3px}
 .ex-note{font-size:12px;color:var(--mt);line-height:1.4}
-.equip{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;background:rgba(10,132,255,.1);color:#4da3ff;border:1px solid rgba(10,132,255,.2);margin-bottom:4px;margin-right:3px}
+.tag{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;margin-bottom:4px;margin-right:3px}
+.tag-wu{background:rgba(10,132,255,.1);color:#4da3ff;border:1px solid rgba(10,132,255,.2)}
+.tag-pr{background:rgba(191,90,242,.1);color:#d084f7;border:1px solid rgba(191,90,242,.2)}
+.tag-ss{background:rgba(255,159,10,.1);color:var(--org);border:1px solid rgba(255,159,10,.2)}
+.tag-sk{background:rgba(50,215,75,.1);color:var(--grn);border:1px solid rgba(50,215,75,.2)}
 .ex-right{text-align:right;flex-shrink:0}
 .ex-sets{font-size:12px;color:var(--mt);margin-bottom:5px;white-space:nowrap}
 .fb{display:inline-block;font-size:9px;font-weight:700;padding:3px 7px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
 .fn{background:rgba(255,69,58,.15);color:var(--red)}
 .fc{background:rgba(255,159,10,.15);color:var(--org)}
 .fy{background:rgba(50,215,75,.15);color:var(--grn)}
+.fp{background:rgba(191,90,242,.15);color:var(--pur)}
 .ex-actions{display:flex;gap:6px;padding:0 12px 12px}
 .ex-btn{flex:1;padding:8px;font-size:12px;font-weight:600;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--tx);cursor:pointer}
 .ex-btn:active{transform:scale(.97)}
@@ -83,8 +90,9 @@ body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans
 .wk-day{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:8px 3px;text-align:center}
 .wk-dn{font-size:10px;font-weight:600;color:var(--mt);margin-bottom:4px;text-transform:uppercase}
 .wk-tag{font-size:8px;font-weight:700;padding:2px 3px;border-radius:3px;display:block;margin:1px auto;text-transform:uppercase}
-.wl{background:rgba(10,132,255,.2);color:#0a84ff}
-.wu{background:rgba(50,215,75,.2);color:#32d74b}
+.wl{background:rgba(255,69,58,.2);color:#ff6b60}
+.wu{background:rgba(10,132,255,.2);color:#0a84ff}
+.wf{background:rgba(232,255,0,.2);color:var(--ac)}
 .wr{background:rgba(255,255,255,.05);color:var(--mt)}
 .notif{position:fixed;bottom:calc(20px + var(--safe));left:50%;transform:translateX(-50%) translateY(80px);background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px 18px;font-size:13px;font-weight:600;z-index:200;transition:transform .3s;white-space:nowrap}
 .notif.show{transform:translateX(-50%) translateY(0)}
@@ -94,19 +102,14 @@ body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans
 <div class="topbar">
   <div class="topbar-row">
     <div class="app-title">GymPro</div>
-    <span class="week-badge">Block A · Week 1</span>
-  </div>
-  <div class="mode-toggle">
-    <button class="mode-btn active" id="btn-gym" onclick="setMode('gym')">🏋️ Gym</button>
-    <button class="mode-btn" id="btn-home" onclick="setMode('home')">🏠 Home</button>
+    <span class="week-badge">BJJ Athlete Programme</span>
   </div>
 </div>
 <div class="nav">
-  <button class="nav-btn active" onclick="go('la')" id="nav-la"><span class="nav-icon">🦵</span>Lower A</button>
-  <button class="nav-btn" onclick="go('ua')" id="nav-ua"><span class="nav-icon">💪</span>Upper A</button>
-  <button class="nav-btn" onclick="go('lb')" id="nav-lb"><span class="nav-icon">🦵</span>Lower B</button>
-  <button class="nav-btn" onclick="go('ub')" id="nav-ub"><span class="nav-icon">💪</span>Upper B</button>
-  <button class="nav-btn" onclick="go('info')" id="nav-info"><span class="nav-icon">📋</span>Rules</button>
+  <button class="nav-btn active" onclick="go('tue')" id="nav-tue"><span class="nav-icon">🦵</span>Tue · Lower</button>
+  <button class="nav-btn" onclick="go('wed')" id="nav-wed"><span class="nav-icon">💪</span>Wed · Upper</button>
+  <button class="nav-btn" onclick="go('fri')" id="nav-fri"><span class="nav-icon">⚡</span>Fri · Full</button>
+  <button class="nav-btn" onclick="go('info')" id="nav-info"><span class="nav-icon">📋</span>Info</button>
 </div>
 <div class="main" id="main"></div>
 <div class="timer-ov" id="tov">
@@ -118,148 +121,268 @@ body{background:var(--bg);color:var(--tx);font-family:'Inter',-apple-system,sans
 <script>
 if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
 
-var mode='gym', cur='la', done={}, tInt=null, tSecs=0, tTotal=0;
+var cur='tue', done={}, tInt=null, tSecs=0, tTotal=0;
 var C=553;
 
+// type: 'warmup' | 'primer' | 'main' | 'superset' | 'skill' | 'finisher'
 var DATA = {
-  gym: {
-    la: {
-      day:'LOWER A', sub:'Monday · Squat dominant · Full CNS after weekend rest', kit:null,
-      ex:[
-        {n:'Back Squat',d:'Primary strength movement. Highest CNS demand — always first.',sets:'4 × 4–6',f:'fn',fr:'Never fail',rest:180,next:'Romanian Deadlift'},
-        {n:'Romanian Deadlift',d:'Hinge pattern while posterior chain is strong. 3 sec eccentric.',sets:'3 × 6–8',f:'fc',fr:'1–2 RIR',rest:90,next:'Bulgarian Split Squat'},
-        {n:'Bulgarian Split Squat',d:'Unilateral stability and hip flexor length. Rear foot on bench.',sets:'3 × 6–8 each',f:'fc',fr:'1–2 RIR',rest:90,next:'Nordic Curl'},
-        {n:'Nordic Hamstring Curl',d:'Injury prevention for grapplers. Start assisted with hands on floor.',sets:'3 × 4–6',f:'fc',fr:'1–2 RIR',rest:90,next:'Tibialis Raise'},
-        {n:'Tibialis Raise',d:'Foot and shin strength. Fixes BJJ foot cramping. Always last.',sets:'3 × 15–20',f:'fy',fr:'Last set fail',rest:60,next:'Next set'}
-      ]
-    },
-    ua: {
-      day:'UPPER A', sub:'Tuesday · Horizontal push + vertical pull · Antagonist pairing', kit:null,
-      ex:[
-        {n:'Barbell Bench Press',d:'Primary horizontal push. Needs fresh CNS. Heaviest upper body movement.',sets:'4 × 4–6',f:'fn',fr:'Never fail',rest:180,next:'Weighted Pull-Up'},
-        {n:'Weighted Pull-Up',d:'Primary vertical pull. Antagonist to bench — lats fresh.',sets:'4 × 4–6',f:'fn',fr:'Never fail',rest:180,next:'Overhead Press'},
-        {n:'Overhead Press',d:'Secondary push. Shoulders warm from bench. Builds handstand strength.',sets:'3 × 6–8',f:'fc',fr:'1–2 RIR',rest:120,next:'Chest-Supported Row'},
-        {n:'Chest-Supported Row',d:'Secondary horizontal pull. Lower back removed from equation.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Incline DB Press'},
-        {n:'Incline Dumbbell Press',d:'Accessory upper chest. Pre-fatigue from bench — lighter loads hit hard.',sets:'3 × 8–10',f:'fy',fr:'Last set fail',rest:60,next:'Face Pull'},
-        {n:'Face Pull',d:'Rotator cuff and rear delt health. Mandatory for shoulder longevity.',sets:'3 × 15–20',f:'fy',fr:'Last set fail',rest:60,next:'Next set'}
-      ]
-    },
-    lb: {
-      day:'LOWER B', sub:'Thursday · Hinge dominant · Wednesday rest = full CNS recovery', kit:null,
-      ex:[
-        {n:'Conventional Deadlift',d:'Heaviest movement in the programme. Absolute first — any fatigue before this is unacceptable.',sets:'4 × 3–5',f:'fn',fr:'Never fail',rest:180,next:'Front Squat'},
-        {n:'Front Squat',d:'Quad dominant, upright torso. Different emphasis from deadlift.',sets:'3 × 5–7',f:'fc',fr:'1–2 RIR',rest:120,next:'Hip Thrust'},
-        {n:'Hip Thrust',d:'Glute peak contraction at full extension. Deadlift does not hit this range.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Single Leg Press'},
-        {n:'Single Leg Press',d:'Unilateral quad volume. Low spinal load when erectors are fatigued.',sets:'3 × 8–10 each',f:'fy',fr:'Last set fail',rest:60,next:'Calf Raise'},
-        {n:'Standing Calf Raise',d:'Full range of motion, slow tempo. Always last.',sets:'4 × 12–15',f:'fy',fr:'Last set fail',rest:60,next:'Next set'}
-      ]
-    },
-    ub: {
-      day:'UPPER B', sub:'Friday · Vertical push + horizontal pull · Row leads', kit:null,
-      ex:[
-        {n:'Barbell Row',d:'Heaviest pull movement. Fresh spinal erectors required. Primary strength driver.',sets:'4 × 5–7',f:'fn',fr:'Never fail',rest:180,next:'DB Shoulder Press'},
-        {n:'Seated DB Shoulder Press',d:'Primary vertical push. Deltoids fresh — rows do not fatigue them.',sets:'4 × 6–8',f:'fc',fr:'1–2 RIR',rest:120,next:'Weighted Dips'},
-        {n:'Weighted Dips',d:'Tricep and lower chest. Hits all three push muscles with complementary angles.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Lat Pulldown'},
-        {n:'Lat Pulldown',d:'Vertical pull volume. Full stretch at top every rep.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Lateral Raise'},
-        {n:'Lateral Raise',d:'Medial delt width. Pre-fatigue from pressing — lighter loads still hit hard.',sets:'3 × 12–15',f:'fy',fr:'Last set fail',rest:45,next:'Hammer Curl'},
-        {n:'Hammer Curl',d:'Brachialis and grip strength. Lowest CNS demand. Always last.',sets:'3 × 10–12',f:'fy',fr:'Last set fail',rest:45,next:'Next set'}
-      ]
-    }
+  tue: {
+    day:'LOWER BODY', sub:'Tuesday · 3:00–4:15PM · Squat + hinge + core + neck',
+    sections:[
+      {
+        label:'Warm Up',
+        items:[
+          {n:'90/90 Hip Stretch',type:'warmup',d:'2 minutes each side. Most important BJJ mobility exercise. Sit with both legs at 90° — front leg internally rotated, back leg externally. Breathe deep and sink.',sets:'2 min each side',f:'fp',fr:'Feel it',rest:0,next:'Hip Circles'},
+          {n:'Hip Circles',type:'warmup',d:'Standing on one leg, trace large circles with the raised knee. Opens the hip joint before loading it.',sets:'10 each direction each leg',f:'fp',fr:'Control',rest:0,next:'Leg Swings'},
+          {n:'Leg Swings',type:'warmup',d:'Hold wall, swing leg forward and back through full range. Hamstring and hip flexor activation.',sets:'15 each leg',f:'fp',fr:'Full range',rest:0,next:'Deep Squat Hold'},
+          {n:'Deep Squat Hold',type:'warmup',d:'Full depth squat, heels flat, elbows pushing knees out. Hold at bottom. Develops ankle dorsiflexion for front squat depth.',sets:'60 seconds',f:'fp',fr:'Heels flat',rest:0,next:'Ankle Circles'},
+          {n:'Ankle Circles',type:'warmup',d:'Seated or standing, rotate each ankle through full range. Prepares joints for front squat loading.',sets:'10 each direction',f:'fp',fr:'Full range',rest:0,next:'Goblet Squat Primer'}
+        ]
+      },
+      {
+        label:'Primer',
+        items:[
+          {n:'Goblet Squat with Pause',type:'primer',d:'Light weight at chest. Pause 3 seconds at bottom every rep. Grooves the front squat pattern before loading the barbell. Elbows up, chest tall.',sets:'2 × 5 light',f:'fp',fr:'Perfect form',rest:60,next:'Barbell Front Squat'}
+        ]
+      },
+      {
+        label:'Main Work',
+        items:[
+          {n:'Barbell Front Squat',type:'main',d:'Primary strength movement. More upright torso than back squat — develops thoracic mobility and anterior core strength that directly transfers to BJJ guard work. Elbows high throughout. Never sacrifice depth for weight.',sets:'4 × 5–6',f:'fn',fr:'Never fail',rest:180,next:'Romanian Deadlift'},
+          {n:'Romanian Deadlift',type:'main',d:'3 second eccentric every rep without exception. Feel the hamstring stretch at the bottom. Back flat, hinge not round. Posterior chain strength for takedown completion and guard recovery.',sets:'3 × 6–8',f:'fc',fr:'1–2 RIR',rest:120,next:'Nordic Hamstring Curl'},
+          {n:'Nordic Hamstring Curl',type:'main',d:'5–8 seconds down on every negative. As slow as physically possible. Catch yourself with your hands at the bottom. This will humble you immediately. Best hamstring injury prevention exercise in existence.',sets:'3 × 5 negatives',f:'fc',fr:'Slow as possible',rest:120,next:'Bulgarian Split Squat'},
+          {n:'Bulgarian Split Squat',type:'main',d:'Rear foot elevated on bench. Front foot far enough forward that shin stays vertical at the bottom. Hip flexor length and single leg stability — both critical for wrestling stance and takedown defence.',sets:'3 × 8–10 each leg',f:'fc',fr:'1–2 RIR',rest:90,next:'Tibialis Raise'}
+        ]
+      },
+      {
+        label:'Superset — Lower Leg',
+        items:[
+          {n:'Tibialis Raise',type:'superset',d:'Back against wall, heels 6 inches out. Lift balls of feet as high as possible, 1 second hold, lower slowly. Fixes BJJ foot cramping. Superset immediately with calf raises.',sets:'3 × 15',f:'fy',fr:'Last set fail',rest:0,next:'Standing Calf Raise'},
+          {n:'Standing Calf Raise',type:'superset',d:'Full range of motion. Slow tempo. Superset with tibialis raises — no rest between the two. Complete lower leg development in one pairing.',sets:'3 × 15',f:'fy',fr:'Last set fail',rest:60,next:'Dragon Flag'}
+        ]
+      },
+      {
+        label:'Core and Skill',
+        items:[
+          {n:'Dragon Flag Progressions',type:'skill',d:'Start with tuck dragon flag if full version is not yet achievable. Lower yourself with complete body tension — straight line from shoulders to feet. Bruce Lee\'s core exercise. Builds the anti-extension strength that makes your guard recovery explosive.',sets:'3 sets to failure',f:'fy',fr:'Failure',rest:90,next:'Cable Woodchoppers'},
+          {n:'Cable Woodchoppers or Heavy Russian Twists',type:'main',d:'Rotational core strength for guard sweeps, kimura attacks, and defensive bridging. Hip-shoulder separation that generates throw and sweep power. Full rotation, controlled speed.',sets:'3 × 10 each side',f:'fy',fr:'Controlled',rest:60,next:'Four-Way Neck Work'}
+        ]
+      },
+      {
+        label:'Neck — Non-Negotiable',
+        items:[
+          {n:'Four-Way Neck Work',type:'main',d:'Forward flexion, extension, left lateral, right lateral. Use manual resistance from your own hand — place hand on forehead and resist as you push forward. BJJ loads your neck constantly. Twice weekly direct neck training prevents the chronic stiffness that develops in every grappler who neglects it.',sets:'3 × 15 each direction',f:'fy',fr:'Controlled',rest:60,next:'Done'}
+        ]
+      }
+    ]
   },
-  home: {
-    la: {
-      day:'LOWER A', sub:'Monday · Squat dominant · Home version',
-      kit:'2×35lb DBs · Resistance band · Chair or sofa · Wall',
-      ex:[
-        {n:'Goblet Squat — 2 sec pause',eq:'2×35lb DBs',d:'Hold both 35s at chest (70lbs total). 2 sec pause at the bottom every rep. Compensates for lighter load with time under tension. Chest up, knees over toes.',sets:'4 × 6–8',f:'fn',fr:'Never fail',rest:120,next:'DB Romanian Deadlift'},
-        {n:'Dumbbell Romanian Deadlift',eq:'2×35lb DBs',d:'35lb in each hand. Hinge at hip, 3 sec controlled eccentric. Identical movement to gym version — higher reps for lighter loading.',sets:'3 × 10–12',f:'fc',fr:'1–2 RIR',rest:90,next:'DB Bulgarian Split Squat'},
-        {n:'DB Bulgarian Split Squat',eq:'2×35lb DBs + Chair',d:'35lb each hand, rear foot on chair or sofa. Identical to gym version. 35lbs per hand is serious unilateral loading.',sets:'3 × 8–10 each',f:'fc',fr:'1–2 RIR',rest:90,next:'Nordic Curl'},
-        {n:'Nordic Hamstring Curl',eq:'Sofa anchor',d:'Tuck feet under sofa. Lower body toward floor as slowly as possible (4–5 sec). Catch with hands, push back up. Start with slow negatives if full reps are not possible yet.',sets:'3 × 4–6',f:'fc',fr:'1–2 RIR',rest:90,next:'Tibialis Raise'},
-        {n:'Tibialis Raise — wall',eq:'Bodyweight + Wall',d:'Back against wall, heels 6 inches out. Lift balls of feet high, 1 sec hold, lower slowly. Identical to gym version.',sets:'3 × 15–20',f:'fy',fr:'Last set fail',rest:45,next:'Next set'}
-      ]
-    },
-    ua: {
-      day:'UPPER A', sub:'Tuesday · Push and pull · Home version',
-      kit:'Pull-up bar · 2×35lb DBs · 20lb DB · Resistance band',
-      ex:[
-        {n:'Feet-Elevated Push-Up',eq:'Floor + Chair',d:'Feet on sofa or chair, hands close. Elevating feet shifts load to upper chest and shoulders — closest bodyweight substitute for bench press. Slow 3 sec eccentric. Add band across back for resistance.',sets:'4 × 8–15',f:'fn',fr:'Never fail',rest:120,next:'Pull-Up'},
-        {n:'Pull-Up — bodyweight',eq:'Pull-up bar',d:'Full range — dead hang at bottom, chin over bar at top. No kipping. Same pattern as weighted gym pull-up. Max clean reps each set.',sets:'4 × max reps',f:'fn',fr:'Never fail',rest:120,next:'DB Overhead Press'},
-        {n:'Standing DB Overhead Press',eq:'2×35lb DBs',d:'35lb in each hand. Press overhead from shoulder height. Standing version engages more core than seated. Same pattern as gym overhead press.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Single Arm DB Row'},
-        {n:'Single Arm DB Row',eq:'35lb DB + Chair',d:'Brace on chair, 35lb in working hand. Full range — let arm hang at bottom, pull to hip. Replaces chest-supported row. Do both sides.',sets:'3 × 10–12 each',f:'fc',fr:'1–2 RIR',rest:90,next:'DB Floor Press'},
-        {n:'DB Floor Press — neutral grip',eq:'2×35lb DBs',d:'Lie on floor, 35lb each hand, palms facing each other. Press up. Floor limits range but still hits chest and triceps effectively. Replaces incline dumbbell press.',sets:'3 × 10–12',f:'fy',fr:'Last set fail',rest:60,next:'Band Pull-Apart'},
-        {n:'Band Pull-Apart',eq:'Resistance band',d:'Hold band at shoulder width, pull apart to chest. Slow controlled. Replaces face pull — same rear delt and rotator cuff stimulus.',sets:'3 × 20–25',f:'fy',fr:'Last set fail',rest:45,next:'Next set'}
-      ]
-    },
-    lb: {
-      day:'LOWER B', sub:'Thursday · Hinge dominant · Home version',
-      kit:'2×35lb DBs · 20lb DB · Resistance band · Sofa',
-      ex:[
-        {n:'DB Romanian Deadlift — slow',eq:'2×35lb DBs',d:'Both 35s, 4 sec eccentric every rep. Replaces conventional deadlift as primary hinge. The slow eccentric makes 70lbs genuinely demanding. Back flat, hinge not round.',sets:'4 × 8–10',f:'fn',fr:'Never fail',rest:120,next:'Goblet Squat'},
-        {n:'Goblet Squat — deep pause',eq:'20lb DB',d:'20lb at chest. Go as deep as possible, 3 sec pause at bottom. Replaces front squat — upright torso, quad dominant. Pause and depth compensate for lighter weight.',sets:'3 × 10–12',f:'fc',fr:'1–2 RIR',rest:90,next:'Banded Hip Thrust'},
-        {n:'Banded Hip Thrust',eq:'Band + Sofa',d:'Upper back on sofa, band across hips anchored under feet. Drive hips to ceiling, 1 sec squeeze at top. Band adds peak contraction resistance dumbbells cannot replicate in this position.',sets:'4 × 15–20',f:'fc',fr:'1–2 RIR',rest:60,next:'Single Leg RDL'},
-        {n:'Single Leg Romanian Deadlift',eq:'35lb DB',d:'35lb in opposite hand to working leg. Hinge forward, non-working leg extends back. Replaces single leg press — hits hamstring, glute, and balance simultaneously.',sets:'3 × 8–10 each',f:'fy',fr:'Last set fail',rest:60,next:'Single Leg Calf Raise'},
-        {n:'Single Leg Calf Raise',eq:'Bodyweight + Step',d:'One foot on a step or kerb. Lower heel below step level, raise up on ball of foot. Full stretch each rep. Replaces standing calf raise.',sets:'3 × 15–20 each',f:'fy',fr:'Last set fail',rest:45,next:'Next set'}
-      ]
-    },
-    ub: {
-      day:'UPPER B', sub:'Friday · Vertical push and pull · Home version',
-      kit:'Pull-up bar · 2×35lb DBs · 20lb DB · Resistance band',
-      ex:[
-        {n:'Pull-Up — max reps',eq:'Pull-up bar',d:'Max clean reps each set. Replaces barbell row as primary pull. If you hit 10+ clean reps consistently, add resistance by looping band with weight hanging from it.',sets:'4 × max reps',f:'fn',fr:'Never fail',rest:120,next:'DB Arnold Press'},
-        {n:'DB Arnold Press',eq:'2×35lb DBs',d:'Start with palms facing you, rotate to palms forward as you press up. Hits all three delt heads. More range of motion than standard shoulder press.',sets:'4 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Tricep Dip'},
-        {n:'Tricep Dip — feet elevated',eq:'2 chairs or sofa',d:'Hands on chair behind you, feet elevated on another surface. Lower until upper arms parallel to floor, press back up. Add weight on lap for more resistance.',sets:'3 × 10–15',f:'fc',fr:'1–2 RIR',rest:90,next:'Band Lat Pulldown'},
-        {n:'Band Lat Pulldown',eq:'Band + Door anchor',d:'Anchor band at top of doorframe. Kneel below, pull band to upper chest. Full stretch at top, squeeze lats at bottom. Replaces lat pulldown — same movement pattern.',sets:'3 × 15–20',f:'fc',fr:'1–2 RIR',rest:60,next:'Lateral Raise'},
-        {n:'DB Lateral Raise',eq:'20lb DB',d:'20lb is the right weight for laterals — isolation not strength. Slow controlled reps, slight bend in elbow, raise to shoulder height only.',sets:'3 × 15–20',f:'fy',fr:'Last set fail',rest:45,next:'Hammer Curl'},
-        {n:'Hammer Curl',eq:'2×35lb DBs',d:'Identical to gym version. 35lb each hand, neutral grip, controlled. No swinging.',sets:'3 × 10–12',f:'fy',fr:'Last set fail',rest:45,next:'Next set'}
-      ]
-    }
+
+  wed: {
+    day:'UPPER BODY', sub:'Wednesday · 7:00–8:15AM · Pull dominant + calisthenics skills',
+    sections:[
+      {
+        label:'Warm Up',
+        items:[
+          {n:'Arm Circles',type:'warmup',d:'10 forward and backward each arm. Progressively larger circles. Shoulder joint lubrication before loading.',sets:'10 each direction',f:'fp',fr:'Full range',rest:0,next:'Band Pull-Aparts'},
+          {n:'Band Pull-Aparts',type:'warmup',d:'Hold band at shoulder width, pull apart to chest. Activates rear delts and external rotators before any pressing.',sets:'20 reps',f:'fp',fr:'Full stretch',rest:0,next:'Shoulder Dislocations'},
+          {n:'Shoulder Dislocations',type:'warmup',d:'Wide grip on band or broomstick. Rotate overhead and behind in one slow arc. Develops the shoulder mobility your handstand work requires.',sets:'10 reps',f:'fp',fr:'Wide grip',rest:0,next:'Wrist Circles'},
+          {n:'Wrist Circles',type:'warmup',d:'10 each direction. BJJ and pressing both load the wrists significantly. Never skip this.',sets:'10 each direction',f:'fp',fr:'Full range',rest:0,next:'Dead Hang'},
+          {n:'Dead Hang',type:'warmup',d:'Hang from pull-up bar with full bodyweight. Decompress spine, activate grip, and stretch lats before pulling work.',sets:'30 seconds',f:'fp',fr:'Relax shoulders',rest:0,next:'Handstand Wall Hold'}
+        ]
+      },
+      {
+        label:'Primer',
+        items:[
+          {n:'Handstand Wall Hold',type:'primer',d:'Face wall, walk feet up until body is vertical. Ears between arms, core tight, legs together. Activates shoulder stabilisers and builds body tension that improves every subsequent exercise.',sets:'3 × 30 seconds',f:'fp',fr:'Body tight',rest:30,next:'Explosive High Pull-Ups'},
+          {n:'Explosive High Pull-Ups',type:'primer',d:'Maximum intent on every rep. Pull as fast as possible — chin well above bar. Neurologically potentiates the pulling muscles before heavier work. Not conditioning — pure speed.',sets:'2 × 3–5',f:'fp',fr:'Max speed',rest:60,next:'Towel Weighted Pull-Ups'}
+        ]
+      },
+      {
+        label:'Main Pulling Work',
+        items:[
+          {n:'Towel Weighted Pull-Ups',type:'main',d:'Wrap a towel around the bar and grip the ends — this is the exact grip demand of lapel and sleeve grips in BJJ. Add weight via belt once bodyweight reps exceed 8. Your most important BJJ exercise in this entire programme.',sets:'4 × 5–8',f:'fn',fr:'Never fail',rest:150,next:'Incline DB Press'}
+        ]
+      },
+      {
+        label:'Superset — Push + Shoulder Health',
+        items:[
+          {n:'Incline Dumbbell Bench Press',type:'superset',d:'Upper chest and anterior shoulder. Dumbbells allow more natural shoulder rotation than barbell — less impingement risk. Superset immediately with pull-aparts.',sets:'3 × 6–8',f:'fc',fr:'1–2 RIR',rest:0,next:'Band Pull-Aparts (superset)'},
+          {n:'Band Pull-Aparts',type:'superset',d:'Immediately after pressing — zero rest. Counteracts the internal rotation that pressing creates. Rear delt activation between sets costs nothing and protects your shoulders across years of training.',sets:'3 × 20',f:'fy',fr:'Full stretch',rest:90,next:'Barbell Rows'}
+        ]
+      },
+      {
+        label:'Superset — Row + Face Pull',
+        items:[
+          {n:'Barbell Rows',type:'superset',d:'Upper back thickness. Control the eccentric — do not let the bar drop. Superset immediately with face pulls.',sets:'4 × 8–10',f:'fc',fr:'1–2 RIR',rest:0,next:'Face Pulls (superset)'},
+          {n:'Face Pulls',type:'superset',d:'Immediately after rows. Rear delt and external rotator health. High rep range is correct here — rear delts respond to volume not low rep heavy work. Non-negotiable for long term shoulder health.',sets:'3 × 15',f:'fy',fr:'Last set fail',rest:90,next:'Weighted Dips'}
+        ]
+      },
+      {
+        label:'Direct Push',
+        items:[
+          {n:'Weighted Dips',type:'main',d:'Slight forward lean to emphasise chest. Tricep and anterior shoulder strength for pushing frames and creating space in BJJ bottom positions.',sets:'3 × 8–10',f:'fc',fr:'1–2 RIR',rest:90,next:'Incline DB Curl'}
+        ]
+      },
+      {
+        label:'Superset — Direct Arm Work',
+        items:[
+          {n:'Incline Dumbbell Curl',type:'superset',d:'Lying on incline bench, arms hanging. Full stretch at bottom — develops long head of bicep specifically. Superset with hammer curls.',sets:'2 × 12',f:'fy',fr:'Last set fail',rest:0,next:'Hammer Curl (superset)'},
+          {n:'Hammer Curl',type:'superset',d:'Neutral grip. Develops brachialis and forearm thickness that improves gi grip pulling strength. The direct arm work gap that was missing from your previous programme.',sets:'2 × 12',f:'fy',fr:'Last set fail',rest:60,next:'Tuck Front Lever Hold'}
+        ]
+      },
+      {
+        label:'Calisthenics Skill + Grip',
+        items:[
+          {n:'Tuck Front Lever Hold',type:'skill',d:'From pull-up bar, bring knees to chest and hold horizontal position. Accumulate 8 seconds per set. Progress: tuck → advanced tuck → one leg extended → full front lever over months. Direct carry-over to pulling strength and body tension.',sets:'3 × 8 seconds',f:'fp',fr:'Accumulate hold',rest:60,next:'Wrist Conditioning'},
+          {n:'Wrist Conditioning',type:'skill',d:'Rice bucket protocol — plunge hand in and open/close fist for 3 minutes. Or plate pinches — hold 10lb plate smooth side at your side for 30 seconds each hand. Gi grip endurance is a competitive differentiator. Build it directly.',sets:'3 minutes',f:'fy',fr:'Burn',rest:0,next:'Done'}
+        ]
+      }
+    ]
+  },
+
+  fri: {
+    day:'FULL BODY', sub:'Saturday · 8:00–9:30AM · Power + strength + calisthenics + cardio',
+    sections:[
+      {
+        label:'Warm Up',
+        items:[
+          {n:"World's Greatest Stretch",type:'warmup',d:'From lunge: same-side hand inside front foot, rotate opposite arm to ceiling, drop elbow to floor, then straighten front leg. Develops hip flexor length, thoracic rotation, and hamstring flexibility in one movement.',sets:'5 each side',f:'fp',fr:'Slow and deliberate',rest:0,next:'Hip Flexor Lunge'},
+          {n:'Hip Flexor Lunge',type:'warmup',d:'Kneeling lunge position. Drive hips forward, hold stretch. Essential before Turkish get-ups and power cleans.',sets:'60 seconds each side',f:'fp',fr:'Feel the stretch',rest:0,next:'Thoracic Rotation'},
+          {n:'Thoracic Rotation',type:'warmup',d:'Seated on heels or quadruped. Rotate thoracic spine as far as possible each direction. Opens up for push press and Turkish get-up overhead positions.',sets:'10 each side',f:'fp',fr:'Full rotation',rest:0,next:'Band Pull-Aparts'},
+          {n:'Band Pull-Aparts',type:'warmup',d:'20 reps. Shoulder prep before overhead work. Quick and effective.',sets:'20 reps',f:'fp',fr:'Full stretch',rest:0,next:'Light KB Swings'},
+          {n:'Light Kettlebell Swings',type:'warmup',d:'Hip hinge activation and posterior chain prep. Drive hips not arms. Prepares the exact movement pattern used in hang power cleans.',sets:'15 reps',f:'fp',fr:'Hip drive',rest:0,next:'Turkish Get-Up'}
+        ]
+      },
+      {
+        label:'Primer',
+        items:[
+          {n:'Turkish Get-Up',type:'primer',d:'Use light weight until the pattern is completely clean. Shoulder stability, hip mobility, core tension, and coordination all trained simultaneously in one movement. Never rush a TGU — each phase is deliberate.',sets:'2 × 3 each side',f:'fp',fr:'Perfect form only',rest:60,next:'Hang Power Clean'}
+        ]
+      },
+      {
+        label:'Power — Maximum Intent',
+        items:[
+          {n:'Hang Power Clean',type:'main',d:'Most technically demanding exercise in this programme. Full recovery between sets — 3 minutes minimum. Every rep at maximum intent. If technique is not solid yet, substitute Hang High Pulls until you get coaching. Develops explosive hip extension for faster takedowns and more powerful scrambles.',sets:'4 × 3–5',f:'fn',fr:'Never fail',rest:180,next:'Push Press'},
+          {n:'Push Press',type:'main',d:'Use leg drive to initiate every rep. The lower-to-upper body power transfer is the training stimulus — not a strict press. Develops the explosive power that finishes double leg takedowns and drives explosive uppercuts.',sets:'3 × 6',f:'fc',fr:'1–2 RIR',rest:150,next:'Trap Bar Deadlift'}
+        ]
+      },
+      {
+        label:'Strength',
+        items:[
+          {n:'Trap Bar Deadlift',type:'main',d:'Heaviest pull of the week. More upright torso than conventional deadlift — reduces lower back stress when erectors are already loaded from earlier in the week. Three full minutes between sets. This is a maximum effort movement.',sets:'3 × 5',f:'fn',fr:'Never fail',rest:180,next:"Farmer's Walks"},
+          {n:"Farmer's Walks",type:'main',d:'As heavy as possible while maintaining upright posture. 40–50 metres per walk. Grip endurance, trap strength, core bracing, and cardiovascular fitness all simultaneously. The most underrated exercise in any programme. Your last set should be genuinely hard to complete.',sets:"4 × 40–50m",f:'fc',fr:'Heavy and upright',rest:90,next:'Tuck Front Lever Hold'}
+        ]
+      },
+      {
+        label:'Superset — Calisthenics Skills',
+        items:[
+          {n:'Tuck Front Lever Hold',type:'skill',d:'Accumulate 8 seconds per set. This is your second front lever session of the week — twice weekly practice produces consistent progression. Progress toward advanced tuck and single leg extended.',sets:'3 × 8 seconds',f:'fp',fr:'Accumulate hold',rest:0,next:'Tuck Back Lever Hold'},
+          {n:'Tuck Back Lever Hold',type:'skill',d:'Superset with front lever. From hang, pull body horizontal behind the bar in tuck position. Complements front lever development — front and back lever together build complete ring and bar strength. Progresses toward human flag.',sets:'3 × 8 seconds',f:'fp',fr:'Accumulate hold',rest:60,next:'Four-Way Neck Work'}
+        ]
+      },
+      {
+        label:'Neck — Non-Negotiable',
+        items:[
+          {n:'Four-Way Neck Work',type:'main',d:'Second neck session of the week. Same as Tuesday — forward flexion, extension, left lateral, right lateral using manual resistance. Twice weekly produces rapid strength and resilience gains.',sets:'3 × 15 each direction',f:'fy',fr:'Controlled',rest:60,next:'Zone 2 Finisher'}
+        ]
+      },
+      {
+        label:'Conditioning Finisher',
+        items:[
+          {n:'Zone 2 Finisher',type:'finisher',d:'10 minutes at fully conversational pace — if you cannot speak in complete sentences you are going too hard. Rowing machine, stationary bike, light jog, or fast walk. Develops the aerobic recovery base that improves your BJJ gas tank over months. Heart rate 65–70% of maximum.',sets:'10 minutes',f:'fy',fr:'Conversational pace',rest:0,next:'Done'}
+        ]
+      }
+    ]
   }
 };
 
-function render(m, s) {
+function countMainEx(sess) {
+  var total = 0;
+  DATA[sess].sections.forEach(function(sec) {
+    sec.items.forEach(function(item) {
+      if(item.type !== 'warmup') total++;
+    });
+  });
+  return total;
+}
+
+function countDone(sess) {
+  var cnt = 0;
+  DATA[sess].sections.forEach(function(sec, si) {
+    sec.items.forEach(function(item, ii) {
+      if(item.type !== 'warmup' && done[sess+'-'+si+'-'+ii]) cnt++;
+    });
+  });
+  return cnt;
+}
+
+function render(s) {
   var main = document.getElementById('main');
   if(s === 'info') { main.innerHTML = renderInfo(); return; }
-  var data = DATA[m][s];
+  var data = DATA[s];
   if(!data) return;
-  var key = m[0] + s;
-  var total = data.ex.length;
-  var doneCnt = 0;
-  for(var i=1;i<=total;i++) if(done[key+i]) doneCnt++;
+
+  var total = countMainEx(s);
+  var doneCnt = countDone(s);
   var pct = Math.round(doneCnt/total*100);
 
-  var html = '<div class="sess-header">';
+  var html = '<div style="padding:12px 14px">';
+  html += '<div class="sess-header">';
   html += '<div class="sess-day">' + data.day + '</div>';
   html += '<div class="sess-sub">' + data.sub + '</div>';
-  if(data.kit) html += '<div class="home-badge">🏠 ' + data.kit + '</div>';
   html += '<div class="prog-wrap"><div class="prog-label"><span>Progress</span><span>' + doneCnt + ' / ' + total + '</span></div>';
   html += '<div class="prog-bar"><div class="prog-fill" id="pfill" style="width:' + pct + '%"></div></div></div>';
   html += '</div>';
 
-  if(m === 'home' && data.kit) {
-    html += '<div class="kit-note">📦 Equipment: ' + data.kit + '</div>';
-  }
+  data.sections.forEach(function(sec, si) {
+    html += '<div class="section-header">' + sec.label + '</div>';
+    sec.items.forEach(function(item, ii) {
+      var key = s + '-' + si + '-' + ii;
+      var isMain = item.type !== 'warmup';
+      var isDone = done[key] ? ' done' : '';
+      var cardClass = 'ex-card';
+      if(item.type === 'warmup') cardClass += ' warmup';
+      else if(item.type === 'primer') cardClass += ' primer';
+      else if(item.type === 'superset') cardClass += ' superset';
 
-  data.ex.forEach(function(ex, idx) {
-    var num = idx + 1;
-    var k = key + num;
-    var isDone = done[k] ? ' done' : '';
-    html += '<div id="ec' + k + '" class="ex-card' + isDone + '">';
-    html += '<div class="ex-main">';
-    html += '<div class="ex-num">' + num + '</div>';
-    html += '<div>';
-    if(ex.eq) html += '<span class="equip">' + ex.eq + '</span>';
-    html += '<div class="ex-name">' + ex.n + '</div>';
-    html += '<div class="ex-note">' + ex.d + '</div>';
-    html += '</div>';
-    html += '<div class="ex-right"><div class="ex-sets">' + ex.sets + '</div>';
-    html += '<span class="fb ' + ex.f + '">' + ex.fr + '</span></div>';
-    html += '</div>';
-    html += '<div class="ex-actions">';
-    html += '<button class="ex-btn" onclick="startT(' + ex.rest + ',\'' + ex.next + '\')">Rest ' + fmtR(ex.rest) + '</button>';
-    html += '<button class="ex-btn done-btn" onclick="markEx(\'' + key + '\',' + num + ',' + total + ')">✓ Done</button>';
-    html += '</div></div>';
+      html += '<div id="ec' + key + '" class="' + cardClass + isDone + '">';
+      html += '<div class="ex-main">';
+
+      // Number / icon
+      var numDisplay = '';
+      if(item.type === 'warmup') numDisplay = '○';
+      else if(item.type === 'primer') numDisplay = '◈';
+      else if(item.type === 'skill') numDisplay = '★';
+      else if(item.type === 'finisher') numDisplay = '⟳';
+      else numDisplay = (ii + 1);
+      html += '<div class="ex-num">' + numDisplay + '</div>';
+
+      html += '<div>';
+      // Tag
+      if(item.type === 'warmup') html += '<span class="tag tag-wu">Warm Up</span>';
+      else if(item.type === 'primer') html += '<span class="tag tag-pr">Primer</span>';
+      else if(item.type === 'superset') html += '<span class="tag tag-ss">Superset</span>';
+      else if(item.type === 'skill') html += '<span class="tag tag-sk">Skill</span>';
+      html += '<div class="ex-name">' + item.n + '</div>';
+      html += '<div class="ex-note">' + item.d + '</div>';
+      html += '</div>';
+
+      html += '<div class="ex-right"><div class="ex-sets">' + item.sets + '</div>';
+      html += '<span class="fb ' + item.f + '">' + item.fr + '</span></div>';
+      html += '</div>';
+
+      html += '<div class="ex-actions">';
+      if(item.rest > 0) {
+        html += '<button class="ex-btn" onclick="startT(' + item.rest + ',\'' + item.next.replace(/'/g,"\\'") + '\')">Rest ' + fmtR(item.rest) + '</button>';
+      } else {
+        html += '<button class="ex-btn" style="opacity:.4;cursor:default">No rest</button>';
+      }
+      html += '<button class="ex-btn done-btn" onclick="markEx(\'' + key + '\',\'' + s + '\')">✓ Done</button>';
+      html += '</div></div>';
+    });
   });
 
+  html += '</div>';
   main.innerHTML = html;
 }
 
@@ -270,72 +393,68 @@ function fmtR(s) {
 }
 
 function renderInfo() {
-  return '<div style="padding:0">' +
+  return '<div style="padding:12px 14px">' +
     '<div class="sec-lbl">Weekly Schedule</div>' +
     '<div class="wk-row">' +
-    '<div class="wk-day"><div class="wk-dn">Mon</div><span class="wk-tag wl">Lower A</span></div>' +
-    '<div class="wk-day"><div class="wk-dn">Tue</div><span class="wk-tag wu">Upper A</span></div>' +
-    '<div class="wk-day"><div class="wk-dn">Wed</div><span class="wk-tag wr">Rest</span></div>' +
-    '<div class="wk-day"><div class="wk-dn">Thu</div><span class="wk-tag wl">Lower B</span></div>' +
-    '<div class="wk-day"><div class="wk-dn">Fri</div><span class="wk-tag wu">Upper B</span></div>' +
-    '<div class="wk-day"><div class="wk-dn">Sat</div><span class="wk-tag wr">Rest</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Mon</div><span class="wk-tag wr">BJJ</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Tue</div><span class="wk-tag wl">Lower</span><span class="wk-tag wr">BJJ</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Wed</div><span class="wk-tag wu">Upper</span><span class="wk-tag wr">BJJ</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Thu</div><span class="wk-tag wr">BJJ</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Fri</div><span class="wk-tag wr">Open Mat</span></div>' +
+    '<div class="wk-day"><div class="wk-dn">Sat</div><span class="wk-tag wf">Full</span></div>' +
     '<div class="wk-day"><div class="wk-dn">Sun</div><span class="wk-tag wr">Rest</span></div>' +
     '</div>' +
-    '<div class="r-card"><div class="r-title" style="color:var(--blu)">Home equipment</div><div class="r-body">2×35lb DBs · 1×20lb DB · Resistance bands · Doorway pull-up bar · Bodyweight<br><br>Toggle Home mode at the top — all 4 sessions adapted for this kit with zero gym access required.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--blu)">Programme Philosophy</div><div class="r-body">This programme is built for a BJJ-primary athlete. Gym serves your grappling — not the other way around. Three focused sessions per week with intelligent exercise selection leave full recovery capacity for 5 BJJ sessions. Every exercise was chosen for direct athletic transfer.</div></div>' +
+    '<div class="sec-lbl">Session Tags</div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--blu)">Warm Up</div><div class="r-body">Joint preparation and movement activation. Never skip. Cold joints under load = injury waiting to happen.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--pur)">Primer</div><div class="r-body">Nervous system activation before heavy work. Potentiates the muscles and patterns used in the main session.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--org)">Superset</div><div class="r-body">Perform back to back with no rest between the pair. Rest only after completing both exercises.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--grn)">Skill</div><div class="r-body">Calisthenics skill progressions. Accumulate hold time or reps. Progress weekly not daily.</div></div>' +
     '<div class="sec-lbl">Failure Rules</div>' +
-    '<div class="r-card"><div class="r-title" style="color:var(--red)">Never to failure</div><div class="r-body">Squat, deadlift, bench, row, weighted pull-up. CNS takes 48–72 hrs to recover. Leave 2–3 reps in reserve always.</div></div>' +
-    '<div class="r-card"><div class="r-title" style="color:var(--org)">1–2 reps in reserve</div><div class="r-body">Secondary compounds and unilateral movements. Work hard but stop before true failure.</div></div>' +
-    '<div class="r-card"><div class="r-title" style="color:var(--grn)">Last set to failure</div><div class="r-body">Isolations only — tibialis raise, face pull, lateral raise, calf raise, hammer curl, band pull-apart.</div></div>' +
-    '<div class="r-card"><div class="r-title" style="color:var(--ac)">Golden rule</div><div class="r-body">Form breaks down — set is over. A rounded back deadlift is an injury, not a rep.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--red)">Never to failure</div><div class="r-body">Front squat, deadlift, power clean, push press, pull-ups. CNS takes 48–72 hrs to recover. Leave 2–3 reps in reserve always.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--org)">1–2 reps in reserve</div><div class="r-body">RDL, BSS, dips, rows, incline press. Work hard — stop before true failure.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--grn)">Last set to failure</div><div class="r-body">Isolations only — tibialis, calf, lateral raise, curls, face pulls, band work.</div></div>' +
+    '<div class="r-card"><div class="r-title" style="color:var(--pur)">Skill work</div><div class="r-body">Accumulate the target hold or reps with perfect form. Quality over quantity always.</div></div>' +
     '<div class="sec-lbl">Progression</div>' +
     '<div class="p-table"><div class="p-head">Double Progression</div>' +
     '<div class="p-row"><span>Hit top of rep range 2 sessions in a row</span><span class="p-val" style="color:var(--grn)">Add weight</span></div>' +
     '<div class="p-row"><span>Cannot reach bottom of rep range</span><span class="p-val" style="color:var(--red)">Drop 10%</span></div>' +
     '<div class="p-row"><span>Hit top on only 1 set</span><span class="p-val">Same weight</span></div></div>' +
-    '<div class="p-table"><div class="p-head">Weight Increments</div>' +
-    '<div class="p-row"><span>Barbell squat / deadlift / bench / row</span><span class="p-val">+2.5–5 kg</span></div>' +
-    '<div class="p-row"><span>Overhead press</span><span class="p-val">+1.25–2.5 kg</span></div>' +
-    '<div class="p-row"><span>Dumbbells</span><span class="p-val">+2 kg</span></div>' +
-    '<div class="p-row"><span>Pull-up / dip (belt)</span><span class="p-val">+2.5 kg</span></div></div>' +
-    '<div class="p-table"><div class="p-head">Deload — Every 4th Week</div>' +
-    '<div class="p-row"><span>Same exercises and days</span><span class="p-val">No changes</span></div>' +
-    '<div class="p-row"><span>Reduce sets</span><span class="p-val">4 → 2–3 sets</span></div>' +
-    '<div class="p-row"><span>Reduce weight</span><span class="p-val">Drop 40–50%</span></div></div>' +
-    '<div class="p-table"><div class="p-head">Block Rotation</div>' +
-    '<div class="p-row"><span>Block A — Weeks 1–8</span><span class="p-val" style="color:var(--blu)">Strength · 3–8 reps</span></div>' +
-    '<div class="p-row"><span>Block B — Weeks 9–16</span><span class="p-val" style="color:var(--grn)">Hypertrophy · 8–15 reps</span></div>' +
-    '<div class="p-row"><span>Block A returns — Week 17</span><span class="p-val" style="color:var(--ac)">Stronger base</span></div></div>' +
+    '<div class="p-table"><div class="p-head">Calisthenics Skill Progression</div>' +
+    '<div class="p-row"><span>Front Lever path</span><span class="p-val">Tuck → Adv Tuck → 1 Leg → Full</span></div>' +
+    '<div class="p-row"><span>Handstand path</span><span class="p-val">Wall hold → Chest wall → Freestanding</span></div>' +
+    '<div class="p-row"><span>Dragon Flag path</span><span class="p-val">Tuck → 1 Leg → Full</span></div>' +
+    '<div class="p-row"><span>Back Lever path</span><span class="p-val">Tuck → Straddle → Full</span></div></div>' +
+    '<div class="p-table"><div class="p-head">Strength Targets (Long Term)</div>' +
+    '<div class="p-row"><span>Front Squat</span><span class="p-val">3 plate → 4 plate</span></div>' +
+    '<div class="p-row"><span>Deadlift (Trap Bar)</span><span class="p-val">4 plate → 5 plate</span></div>' +
+    '<div class="p-row"><span>Weighted Pull-Up</span><span class="p-val">BW+45lbs → BW+65lbs</span></div>' +
+    '<div class="p-row"><span>Farmer Walk</span><span class="p-val">BW per hand</span></div></div>' +
     '</div>';
-}
-
-function setMode(m) {
-  mode = m;
-  document.getElementById('btn-gym').classList.toggle('active', m==='gym');
-  document.getElementById('btn-home').classList.toggle('active', m==='home');
-  render(mode, cur);
 }
 
 function go(s) {
   cur = s;
   document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active')});
   document.getElementById('nav-'+s).classList.add('active');
-  render(mode, s);
+  render(s);
   document.getElementById('main').scrollTop = 0;
 }
 
-function markEx(key, num, total) {
-  var k = key + num;
-  done[k] = true;
-  var card = document.getElementById('ec' + k);
+function markEx(key, sess) {
+  done[key] = true;
+  var card = document.getElementById('ec' + key);
   if(card) card.classList.add('done');
-  var fill = document.getElementById('pfill');
-  var doneCnt = 0;
-  for(var i=1;i<=total;i++) if(done[key+i]) doneCnt++;
+  var total = countMainEx(sess);
+  var doneCnt = countDone(sess);
   var pct = Math.round(doneCnt/total*100);
-  if(fill) fill.style.width = pct + '%';
-  var lbl = fill ? fill.parentElement.previousElementSibling.querySelector('span:last-child') : null;
-  if(lbl) lbl.textContent = doneCnt + ' / ' + total;
-  showN('Exercise ' + num + ' complete ✓');
+  var fill = document.getElementById('pfill');
+  if(fill) {
+    fill.style.width = pct + '%';
+    var lbl = fill.parentElement.previousElementSibling.querySelector('span:last-child');
+    if(lbl) lbl.textContent = doneCnt + ' / ' + total;
+  }
+  showN('Exercise complete ✓');
   if(doneCnt === total) setTimeout(function(){showN('🔥 Session complete! Great work.');}, 800);
 }
 
@@ -366,7 +485,7 @@ function showN(msg){
   setTimeout(function(){n.classList.remove('show');}, 2500);
 }
 
-render('gym','la');
+render('tue');
 </script>
 </body>
 </html>
